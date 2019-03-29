@@ -20,22 +20,37 @@
 	function	BoundsHighlighter:Start()
 		Description:
 			Enables the highlighter
-			
+		Note:
+			Cannot be called until a BoundsPart is set via :SetBoundsPart()
+	
+	
 	function	BoundsHighlighter:Stop()
 		Description:
 			Disables the highlighter
+		Note:
+			None
+		
 			
 	function	BoundsHighlighter:Render(Model)
 		Description:
 			Adds a model to the rendering process
+		Note:
+			Designed for standard Humanoids, so it won't do Parts inside of Parts
+		
 			
 	function	BoundsHighlighter:AddToIgnoreList(Instance)
 		Description:
 			Adds an instance to the ignore list of the visibility checks
+		Note:
+			None
+		
 			
 	function	BoundsHighlighter:SetBoundsPart(BasePart)
 		Description:
 			Sets the part that will be used to calculate the bounds
+		Note:
+			The part's Front face must be facing the camera (at least mostly)
+			
 			
 	------------------------------------------------------------------------------------
 	Example Usage:
@@ -93,7 +108,9 @@ local RenderModels	= {};
 
 local BoundsPos, BoundsSize	= v2(), v2()
 -- These actually don't need to be updated every single frame.
--- I've tested, and you get acceptable results with a simple loop.
+-- I've tested, and you get acceptable results with a simple wait() loop
+-- and it has a lower performance cost.
+
 spawn(function()
 	while wait() do
 		if Enabled and BoundsPart then
@@ -122,7 +139,7 @@ local function InBounds(Object)
 	-- This function DOES NOT account for rotation.
 	-- However, it provides results that are close enough
 	-- to fulfill our basic usage cases. Calculating
-	-- rotation make the module slower and take roughly
+	-- rotation makes the module slower and take roughly
 	-- double the CPU power. If you know of a good method,
 	-- please let me know!
 	
