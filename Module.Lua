@@ -281,6 +281,7 @@ function Highlighter:Render(Model)
 				
 				-- Highlight color
 				Clone.Color = Color3.new(0.9,0,0)
+				Clone.Transparency	= 1
 				
 			Clone.Parent = Folder
 				
@@ -304,6 +305,7 @@ function Highlighter:Render(Model)
 						
 						-- Highlight color
 						Clone.Color = Color3.new(0.9,0,0)
+						Clone.Transparency	= 1
 						
 					Clone.Parent = Folder
 						
