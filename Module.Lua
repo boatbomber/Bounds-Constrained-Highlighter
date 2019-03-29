@@ -5,7 +5,7 @@
 		
 	Explanation, full example place, documentaion, and discussion here:
 	
-	[insert devforum link once posted]
+	https://devforum.roblox.com/t/bounds-constrained-highlighter/259577
 	
 	------------------------------------------------------------------------------------
 	Module Description:
