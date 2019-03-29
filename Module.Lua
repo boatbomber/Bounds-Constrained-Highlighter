@@ -17,37 +17,37 @@
 	------------------------------------------------------------------------------------
 	Module API:
 		
-	function	ThreatHighlighter:Start()
+	function	BoundsHighlighter:Start()
 		Description:
 			Enables the highlighter
 			
-	function	ThreatHighlighter:Stop()
+	function	BoundsHighlighter:Stop()
 		Description:
 			Disables the highlighter
 			
-	function	ThreatHighlighter:Render(Model)
+	function	BoundsHighlighter:Render(Model)
 		Description:
 			Adds a model to the rendering process
 			
-	function	ThreatHighlighter:AddToIgnoreList(Instance)
+	function	BoundsHighlighter:AddToIgnoreList(Instance)
 		Description:
 			Adds an instance to the ignore list of the visibility checks
 			
-	function	ThreatHighlighter:SetSightBoundsPart(BasePart)
+	function	BoundsHighlighter:SetBoundsPart(BasePart)
 		Description:
-			Sets the part that will calculate if an object is in the sight
+			Sets the part that will be used to calculate the bounds
 			
 	------------------------------------------------------------------------------------
 	Example Usage:
 		
 	for i, npc in pairs(workspace.NPCs:GetChildren()) do
-		ThreatHighlighter:Render(npc)
+		BoundsHighlighter:Render(npc)
 	end
 	
-	ThreatHighlighter:SetSightBoundsPart(FPSViewModel.Sight)
-	ThreatHighlighter:AddToIgnoreList(FPSViewModel)
+	BoundsHighlighter:SetBoundsPart(FPSViewModel.Sight)
+	BoundsHighlighter:AddToIgnoreList(FPSViewModel)
 	
-	ThreatHighlighter:Start()
+	BoundsHighlighter:Start()
 	
 	------------------------------------------------------------------------------------
 	
@@ -86,7 +86,7 @@ ScreenGui.Parent	= game.Players.LocalPlayer:WaitForChild("PlayerGui")
 local Highlighter	= {};
 
 local Enabled			= false
-local SightBoundsPart	= nil
+local BoundsPart	= nil
 local IgnoreList		= {}
 
 local RenderModels	= {};
@@ -96,15 +96,15 @@ local BoundsPos, BoundsSize	= v2(), v2()
 -- I've tested, and you get acceptable results with a simple loop.
 spawn(function()
 	while wait() do
-		if Enabled and SightBoundsPart then
+		if Enabled and BoundsPart then
 			
-			local cframe,size = SightBoundsPart.CFrame,SightBoundsPart.Size
+			local cframe,size = BoundsPart.CFrame,BoundsPart.Size
 	
 			-- This is why it's not worth doing every frame; this area calculation isn't too cheap
 			local tR	= WorldToViewportPoint(Camera,	cframe * v3(-size.x/2,  size.y/2, -size.z/2))
 			local bR	= WorldToViewportPoint(Camera,	cframe * v3(-size.x/2, -size.y/2, -size.z/2))
 			local tL	= WorldToViewportPoint(Camera,	cframe * v3( size.x/2,  size.y/2, -size.z/2))
-			local p		= WorldToViewportPoint(Camera,SightBoundsPart.Position)
+			local p		= WorldToViewportPoint(Camera,BoundsPart.Position)
 			
 			
 			BoundsSize	= v2(
@@ -146,9 +146,9 @@ end
 RunService.RenderStepped:Connect(function()
 	--Each render step, we perform our highlight checks
 	
-	if Enabled and SightBoundsPart then
+	if Enabled and BoundsPart then
 	
-		local SightPos = (SightBoundsPart or Camera).CFrame.Position
+		local SightPos = (BoundsPart or Camera).CFrame.Position
 		
 		for i=1, #RenderModels do
 			-- Handle each model
@@ -211,17 +211,17 @@ end)
 -- Module methods
 
 	-- Set the boundspart
-function Highlighter:SetSightBoundsPart(Object)
+function Highlighter:SetBoundsPart(Object)
 	assert(
 		(Object) and (typeof(Object) == "Instance") and (Object:IsA("BasePart")),
-		"Invalid SightBoundsPart. Must be an existing BasePart"
+		"Invalid BoundsPart. Must be an existing BasePart"
 	)
 	
-	SightBoundsPart = Object
+	BoundsPart = Object
 end
 	-- Highlighted enabled inside given object
 function Highlighter:Start()
-	assert(SightBoundsPart, "Cannot start without valid SightBoundsPart. Set one via :SetSightBoundsPart(Object) before calling :Start()")
+	assert(BoundsPart, "Cannot start without valid BoundsPart. Set one via :SetBoundsPart(Object) before calling :Start()")
 	
 	Enabled = true
 end;
